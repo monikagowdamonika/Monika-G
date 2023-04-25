@@ -1,0 +1,26 @@
+import pandas as pd 
+import numpy as np
+from sklearn.cluster import Birch,DBSCAN
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+df=pd.read_csv('iris.csv')
+df.dropna(inplace=True)
+x=df.iloc[:,:-1].values
+scaler=StandardScaler()
+x_scale=scaler.fit_transform(x)
+num_clusters=3
+
+brc=Birch(n_clusters=num_clusters)
+brc.fit(x_scale)
+brc_labels=brc.predict(x_scale)
+
+dbscan=DBSCAN(eps=0.5,min_samples=5)
+dbscan_labels=dbscan.fit_predict(x_scale)
+fig,ax=plt.subplots(1,2,figsize=(12,4))
+ax[0].scatter(x[:,0],x[:,1],c=brc_labels,cmap='viridis')
+ax[0].set_title('brich cluster')
+ax[1].scatter(x[:,0],x[:,1],c=dbscan_labels,cmap='viridis')
+ax[1].set_title('dbscan clustering')
+plt.show()
+
